@@ -99,14 +99,22 @@ export default function CartDrawer() {
             <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-islamic-pattern">
               {step === 'cart' ? (
                 Object.keys(cart).length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-white/30 space-y-6">
-                    <ShoppingCart className="w-20 h-20 opacity-10" />
-                    <p className="text-xl font-amiri">السلة فارغة</p>
+                  <div className="h-full flex flex-col items-center justify-center text-white/30 space-y-6 px-6 text-center">
+                    <motion.div
+                      animate={{ y: [0, -10, 0] }}
+                      transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                    >
+                      <ShoppingCart className="w-20 h-20 opacity-20 text-islamic-green" />
+                    </motion.div>
+                    <div className="space-y-2">
+                      <p className="text-2xl font-amiri text-white">السلة فارغة حالياً</p>
+                      <p className="text-sm font-cairo text-white/60">لم تضف أي أصناف بعد، استكشف قائمتنا اللذيذة!</p>
+                    </div>
                     <button 
                       onClick={() => setIsCartOpen(false)}
                       className="px-8 py-3 bg-islamic-green/10 text-islamic-green border border-islamic-green/20 rounded-full font-bold hover:bg-islamic-green hover:text-white transition-all font-cairo"
                     >
-                      متابعة الطلب
+                      تصفح القائمة
                     </button>
                   </div>
                 ) : (

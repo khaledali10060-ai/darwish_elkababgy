@@ -39,10 +39,7 @@ export default function Booking() {
 
       const encodedMessage = encodeURIComponent(message);
       
-      setTimeout(() => {
-        window.open(`https://wa.me/201272991000?text=${encodedMessage}`, "_blank");
-        setShowSuccess(false);
-      }, 3000);
+      window.open(`https://wa.me/201272991000?text=${encodedMessage}`, "_blank");
       
     }, 800);
   };
@@ -128,7 +125,7 @@ export default function Booking() {
             <Moon className="w-6 h-6 text-islamic-green fill-islamic-green/20 -scale-x-100" />
           </div>
           
-          <h2 className="text-3xl md:text-5xl font-bold text-islamic-green mb-4 font-amiri text-glow-white">احجز طاولتك</h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-islamic-green mb-4 font-amiri text-glow-white">احجز مكانك</h2>
           <h3 className="text-xl md:text-2xl font-bold text-brand-white/80 mb-6 font-amiri">درويش الكبابجي</h3>
           <p className="text-brand-white/60 font-cairo">
             يرجى ملء البيانات التالية وسنقوم بتأكيد حجزك عبر الواتساب.

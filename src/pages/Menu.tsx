@@ -175,6 +175,7 @@ const menuData: Record<string, MenuItem[]> = {
 
 export default function Menu() {
   const [activeSection, setActiveSection] = useState(categories[0].id);
+  const [searchQuery, setSearchQuery] = useState("");
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
   
   // Cart Context
@@ -187,6 +188,25 @@ export default function Menu() {
     isCartOpen, 
     setIsCartOpen 
   } = useCart();
+
+  const filteredMenuData = Object.entries(menuData).reduce((acc, [category, items]) => {
+    const categoryName = categories.find(c => c.id === category)?.name || "";
+    
+    const filteredItems = items.filter(item => 
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      categoryName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    
+    if (filteredItems.length > 0) {
+      acc[category] = filteredItems;
+    }
+    return acc;
+  }, {} as Record<string, MenuItem[]>);
+
+  const filteredCategories = categories.filter(category => 
+    filteredMenuData[category.id] && filteredMenuData[category.id].length > 0
+  );
 
   const [step, setStep] = useState<'cart' | 'checkout'>('cart');
   const [checkoutData, setCheckoutData] = useState({
@@ -276,7 +296,7 @@ export default function Menu() {
       {/* Mobile Sticky Navigation (Horizontal Scroll) */}
       <div className="lg:hidden sticky top-[60px] md:top-[72px] z-40 bg-matte-black/90 backdrop-blur-md border-b border-white/5 shadow-sm">
         <div className="flex overflow-x-auto hide-scrollbar py-4 px-4 gap-3 snap-x">
-          {categories.map((category) => (
+          {filteredCategories.map((category) => (
             <button
               key={category.id}
               onClick={() => scrollToSection(category.id)}
@@ -303,7 +323,7 @@ export default function Menu() {
             </div>
             
             <h3 className="font-amiri text-2xl text-white mb-4 px-4 border-b border-white/5 pb-4">الأقسام</h3>
-            {categories.map(category => (
+            {filteredCategories.map(category => (
               <button
                 key={category.id}
                 onClick={() => scrollToSection(category.id)}
@@ -322,8 +342,24 @@ export default function Menu() {
         {/* Main Content (Left Side due to RTL) */}
         <div className="w-full lg:w-2/3 xl:w-3/4 p-4 md:p-8 lg:p-12 xl:p-16 space-y-24">
           
+          {/* Search Bar */}
+          <div className="mb-12 relative">
+            <input
+              type="text"
+              placeholder="ابحث عن صنف..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full p-4 pr-12 rounded-full bg-[#151515] border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-islamic-green transition-all"
+            />
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </div>
+
           {/* Delivery Platforms Section */}
-          <section data-aos="fade-down" className="mb-16 -mt-20">
+          <section data-aos="fade-down" className="mb-16">
             <div className="flex flex-col items-center justify-center text-center gap-4">
               <div className="space-y-1">
                 <h2 className="text-xl md:text-2xl font-amiri font-bold text-islamic-green">
@@ -361,7 +397,7 @@ export default function Menu() {
             </div>
           </section>
 
-          {categories.map((category) => (
+          {filteredCategories.map((category) => (
             <section
               key={category.id}
               id={category.id}
@@ -374,7 +410,7 @@ export default function Menu() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {menuData[category.id].map((item, idx) => {
+                {filteredMenuData[category.id].map((item, idx) => {
                   const hasWeights = !!item.prices;
                   const singleQty = !hasWeights ? (cart[item.name]?.quantity || 0) : 0;
 

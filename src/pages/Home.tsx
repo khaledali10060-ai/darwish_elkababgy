@@ -169,7 +169,7 @@ export default function Home() {
                   to="/booking"
                   className="w-full sm:w-auto px-12 py-4 bg-islamic-green text-white font-bold rounded-full flex items-center justify-center gap-3 shadow-xl glow-green hover:glow-green-strong text-lg transition-all"
                 >
-                  احجز طاولتك
+                  احجز مكانك
                   <MapPin className="w-5 h-5" />
                 </Link>
                 <Link 
